@@ -1,0 +1,44 @@
+'.dyn.caret.begin.document':
+  '#!/usr/bin/env':
+    'prefix': 'env'
+    'body': '#!/usr/bin/env $1\n'
+  '#!/usr/bin/env bash':
+    'prefix': 'bash'
+    'body': '#!/usr/bin/env bash\n'
+  '#!/bin/sh':
+    'prefix': 'sh'
+    'body': '#!/bin/sh\n'
+  '#!/usr/bin/env zsh':
+    'prefix': 'zsh'
+    'body': '#!/usr/bin/env zsh\n'
+'.source.shell':
+  'Tempdir':
+    'prefix': 'tmpd'
+    'body': '${1:TMPDIR}="\\$(mktemp -d -t ${2:`echo "${TM_FILENAME%.*}" | sed -e \'s/[^[:alnum:]]/_/g\' -e \'s/^$/untitled/\'`})"\ntrap \'${3:rm -rf "\\$${1/.*\\s//}"}\' EXIT INT HUP TERM\n'
+  'Tempfile':
+    'prefix': 'tmpf'
+    'body': '${1:TMPFILE}="\\$(mktemp -t ${2:`echo "${TM_FILENAME%.*}" | sed -E -e \'s/[^[:alnum:]]/_/g\' -e \'s/^$/untitled/\'`})"\ntrap \'${3:rm -f "\\$${1/.*\\s//}"}\' EXIT INT HUP TERM\n'
+  'case … esac':
+    'prefix': 'case'
+    'body': 'case ${1:word} in\n\t${2:pattern} )\n\t\t$0;;\nesac'
+  'elif …':
+    'prefix': 'elif'
+    'body': 'elif ${2:[[ ${1:condition} ]]}; then\n\t${0:#statements}'
+  'for … done':
+    'prefix': 'for'
+    'body': 'for (( i = 0; i < ${1:10}; i++ )); do\n\t${0:#statements}\ndone'
+  'for … in … done':
+    'prefix': 'forin'
+    'body': 'for ${1:i}${2/.+/ in /}${2:words}; do\n\t${0:#statements}\ndone'
+  'Here Document':
+    'prefix': 'here'
+    'body': '<<-${2:\'${1:TOKEN}\'}\n\t$0\n${1/[\'"`](.+)[\'"`]/$1/}'
+  'if … fi':
+    'prefix': 'if'
+    'body': 'if ${2:[[ ${1:condition} ]]}; then\n\t${0:#statements}\nfi'
+  'until … done':
+    'prefix': 'until'
+    'body': 'until ${2:[[ ${1:condition} ]]}; do\n\t${0:#statements}\ndone'
+  'while … done':
+    'prefix': 'while'
+    'body': 'while ${2:[[ ${1:condition} ]]}; do\n\t${0:#statements}\ndone'
